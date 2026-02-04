@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrecisionPulse | Unified IoT Farm Management</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="sticky-header">
+        <div class="header-left">
+            <div class="logo-section">
+                <i class="fas fa-pulse pulse-icon"></i>
+                <span class="brand-name">PrecisionPulse</span>
+                <span class="tagline">Smart Agriculture</span>
+            </div>
+            <button id="theme-toggle" onclick="toggleTheme()" class="theme-btn">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
+        </div>
+        <div class="nav-controls">
+            <div class="farm-info">
+                <strong>Green Valley Farm</strong>
+                <span>Last updated: <span id="sync-time">Just now</span></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <section class="top-stats">
+            <div class="metric-card border-moisture">
+                <div class="card-top">
+                    <span class="dot green"></span> <span class="label">Soil Moisture (Avg)</span>
+                    <i class="fas fa-tint icon-bg"></i>
+                </div>
+                <div class="card-mid">
+                    <span class="value" id="moisture-val">--</span><span class="unit">%</span>
+                </div>
+                <div id="moisture-status" class="card-bottom green-text">Optimal Levels</div>
+            </div>
+
+            <div class="metric-card border-temp">
+                <div class="card-top">
+                    <span class="dot green"></span> <span class="label">Temperature</span>
+                    <i class="fas fa-thermometer-half icon-bg"></i>
+                </div>
+                <div class="card-mid">
+                    <span class="value" id="temp-val">--</span><span class="unit">°F</span>
+                </div>
+            </div>
+
+            <div class="metric-card border-ph">
+                <div class="card-top">
+                    <span class="dot green"></span> <span class="label">pH Level (Avg)</span>
+                    <i class="fas fa-flask icon-bg"></i>
+                </div>
+                <div class="card-mid">
+                    <span class="value" id="ph-val">--</span>
+                </div>
+            </div>
+
+            <div class="metric-card border-sensors">
+                <div class="card-top">
+                    <span class="dot yellow"></span> <span class="label">Active Sensors</span>
+                    <i class="fas fa-wave-square icon-bg"></i>
+                </div>
+                <div class="card-mid">
+                    <span class="value" id="active-sensors">--</span><span class="unit">/16</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="content-columns">
+            <div class="column-left">
+                
+                <section class="card monitor-section">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-pie"></i> Real-Time Insight</h3>
+                        <span id="monitor-badge" class="status-badge optimal">Optimal</span>
+                    </div>
+                    <div class="monitor-body">
+                        <div class="gauge-wrapper">
+                            <div class="gauge-circle" style="--p:65; --c:var(--primary);">
+                                <div class="gauge-content">
+                                    <span id="gauge-val" class="gauge-number">65</span>%
+                                </div>
+                            </div>
+                            <span class="gauge-label">Avg Moisture</span>
+                        </div>
+                        <div class="insight-container">
+                            <div class="insight-box" id="insight-box">
+                                <div class="insight-icon"><i class="fas fa-lightbulb"></i></div>
+                                <div class="insight-content">
+                                    <strong>Recommendation</strong>
+                                    <p id="insight-text">Soil levels are balanced. No irrigation needed for the next 4-6 hours.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card map-section">
+                    <div class="card-header">
+                        <h3><i class="fas fa-map-marked-alt"></i> Field Map</h3>
+                        <div class="map-key">
+                            <span class="key-item"><span class="dot green"></span> Green-Optimal</span>
+                            <span class="key-item"><span class="dot yellow"></span> Yellow-Caution</span>
+                            <span class="key-item"><span class="dot red"></span> Red-Critical</span>
+                        </div>
+                    </div>
+                    <div class="map-container">
+                        <div id="field-map" class="field-map-area"></div>
+                    </div>
+                </section>
+
+                <section class="card graph-section">
+                    <h3>Moisture Trends (24h)</h3>
+                    <div class="chart-container">
+                        <canvas id="moistureChart"></canvas>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h3>Crop Recommendations</h3>
+                    <p class="sub-text">Personalized options based on soil pH and water requirements</p>
+                    <div id="crop-list" class="crop-recommendation-list">
+                        </div>
+                </section>
+            </div>
+
+            <div class="column-right">
+                <section class="card weather-card">
+                    <h3><i class="fas fa-sun" style="color:#f59e0b; margin-right:8px;"></i> Weather Forecast</h3>
+                    <div id="weather-display" class="weather-container"></div>
+                </section>
+
+                <section class="card">
+                    <h3>Field Zones Data</h3>
+                    <div id="zone-list" class="zone-list"></div>
+                </section>
+
+                <section class="card control-card">
+                    <div class="control-header">
+                        <h3><i class="fas fa-tint"></i> Irrigation Control</h3>
+                        <div class="auto-toggle">
+                            <span>Auto</span>
+                            <label class="switch">
+                                <input type="checkbox" id="auto-mode" checked onchange="toggleAutoMode()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="pump-controls" class="pump-grid"></div>
+                </section>
+
+                <section class="card alert-card">
+                    <h3>Recent Alerts</h3>
+                    <div id="alert-list" class="alert-container"></div>
+                </section>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
