@@ -1,8 +1,8 @@
 How to run:
 
 Terminal 1:
-``` node server.js ```
+``` node server.js ``` (to start the script)
 
 Terminal 2:
-```node utils/simulator.js```
+```node utils/simulator.js``` (to start the simulation hardware)
 
